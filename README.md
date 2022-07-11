@@ -289,4 +289,210 @@ public class CardController {
     }
 }
 ```
+- Make sure that all the dependent Entity Java files & JPA Repository files are present inside the three projects like shown below,
 
+## accounts\src\main\java\com\bank\accounts\model\Account.java
+
+``` java
+package com.bank.accounts.model;
+
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+@Entity
+@Getter @Setter @ToString
+public class Account {
+
+    @Column(name="customer_id")
+    private int customerId;
+
+    @Column(name="account_number")
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long accountNumber;
+
+    @Column(name="account_type")
+    private String accountType;
+
+    @Column(name = "branch_address")
+    private String branchAddress;
+
+    @Column(name = "create_dt")
+    private LocalDate createDt;
+
+}
+```
+
+## \accounts\src\main\java\com\bank\accounts\model\Customer.java
+``` java
+package com.bank.accounts.model;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+@Getter @Setter @ToString
+public class Customer {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "customer_id")
+    private int customerId;
+
+    @Column(name="name")
+    private String name;
+
+    @Column(name="email")
+    private String email;
+
+    @Column(name = "mobile_number")
+    private String mobileNumber;
+
+    @Column(name = "create_dt")
+    private LocalDate createDt;
+}
+```
+## \accounts\src\main\java\com\bank\accounts\repository\AccountsRepository.java
+``` java
+package com.bank.accounts.repository;
+
+import com.bank.accounts.model.Account;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface AccountsRepository extends CrudRepository<Account, Long> {
+
+    Account findByCustomerId(int customerId);
+
+}
+```
+## \loans\src\main\java\com\bank\loans\model\Loan.java
+``` java
+package com.bank.loans.model;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@Getter @Setter @ToString
+public class Loan {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "loan_number")
+    private int loanNumber;
+
+    @Column(name = "customer_id")
+    private int customerId;
+
+    @Column(name="start_dt")
+    private Date startDt;
+
+    @Column(name = "loan_type")
+    private String loanType;
+
+    @Column(name = "total_loan")
+    private int totalLoan;
+
+    @Column(name = "amount_paid")
+    private int amountPaid;
+
+    @Column(name = "outstanding_amount")
+    private int outstandingAmount;
+
+    @Column(name = "create_dt")
+    private String createDt;
+
+}
+```
+
+## \loans\src\main\java\com\bank\loans\repository\LoansRepository.java
+``` java
+package com.bank.loans.repository;
+
+import java.util.List;
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import com.bank.loans.model.Loan;
+
+@Repository
+public interface LoansRepository extends CrudRepository<Loan, Long> {
+
+
+    List<Loan> findByCustomerIdOrderByStartDtDesc(int customerId);
+
+}
+```
+## \cards\src\main\java\com\bank\cards\model\Card.java
+``` java
+package com.bank.cards.model;
+
+
+import lombok.*;
+
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@Getter
+@Setter
+@ToString
+public class Card {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "card_id")
+    private int cardId;
+
+    @Column(name = "customer_id")
+    private int customerId;
+
+    @Column(name = "card_number")
+    private String cardNumber;
+
+    @Column(name = "card_type")
+    private String cardType;
+
+    @Column(name = "total_limit")
+    private int totalLimit;
+
+    @Column(name = "amount_used")
+    private int amountUsed;
+
+    @Column(name = "available_amount")
+    private int availableAmount;
+
+    @Column(name = "create_dt")
+    private Date createDt;
+}
+```
+## \cards\src\main\java\com\bank\cards\repository\CardsRepository.java
+``` java
+package com.bank.cards.repository;
+
+import com.bank.cards.model.Card;
+import org.springframework.data.repository.CrudRepository;
+
+import java.util.List;
+
+public interface CardRepository extends CrudRepository<Card, Long> {
+
+    List<Card> findByCustomerId(int customerId);
+}
+```
+- To set up tables, columns, data needed inside the H2 database, create a **data.sql** file in all the microservices under **src\main\resources\\** folder. Below are the sample SQL scripts for each microservice. Please note that these scripts will be executed everytime you start the microservice and the moment you stop/restart your service all your data present inside your H2 database will be lost. So please make sure not to use internal memory H2 database inside production applications.
