@@ -583,7 +583,7 @@ INSERT INTO `cards` (`card_number`, `customer_id`, `card_type`, `total_limit`, `
 - Access the URLs of H2 databases of all the three microservices to make sure tables, columns, data is created inside them successfully. The URLs are [http://localhost:8085/h2- console/](http://localhost:8085/h2-console), [http://localhost:8095/h2-console/](http://localhost:8095/h2-console), [http://localhost:9090h2-console/](http://localhost:9090/h2-console) respectively.
 - Invoke the REST APIs http://localhost:8085/myAccount, http://localhost:8095/myLoans, http://localhost:9090/myCards through Postman by passing the below request in JSON format. You should get the response from the corresponding microservices.
 
-```
+```js
 {
     "customerId": 1
 }
