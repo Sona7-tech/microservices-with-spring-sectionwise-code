@@ -187,5 +187,106 @@ public class BankCardsApplication {
 
 }
 ```
+- Create a new Rest Controller classes like mentioned below for all the three microservices. We can use **@GetMapping** as well instead of **@PostMapping**. But I used **@PostMapping** to make sure any senstive information of Bank customer should not get exposed in the browser URL.
 
+## accounts\src\main\java\com\bank\accounts\controller\AccountsController.java
+``` java
+package com.bank.accounts.controller;
+
+import com.bank.accounts.model.Account;
+import com.bank.accounts.model.Customer;
+import com.bank.accounts.repository.AccountsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class AccountsController {
+
+
+    @Autowired
+    private AccountsRepository accountsRepository;
+
+    @PostMapping (value = "/myAccount")
+    public Account getAccountDetails(@RequestBody Customer customer) {
+
+        Account accounts = accountsRepository.findByCustomerId(customer.getCustomerId());
+        if (accounts != null) {
+            return accounts;
+        } else {
+            return null;
+        }
+
+    }
+
+}
+```
+## \loans\src\main\java\com\bank\loans\controller\LoansController.java
+``` java
+package com.bank.loans.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.bank.loans.model.Customer;
+import com.bank.loans.model.Loan;
+import com.bank.loans.repository.LoansRepository;
+
+@RestController
+public class LoansController {
+
+    @Autowired
+    private LoansRepository loansRepository;
+
+    @PostMapping("/myLoans")
+    public List<Loan> getLoansDetails(@RequestBody Customer customer) {
+        List<Loan> loans = loansRepository.findByCustomerIdOrderByStartDtDesc(customer.getCustomerId());
+        if (loans != null) {
+            return loans;
+        } else {
+            return null;
+        }
+
+    }
+
+}
+```
+## \cards\src\main\java\com\eazybytes\cards\controller\CardsController.java
+``` java
+package com.bank.cards.controller;
+
+
+import com.bank.cards.model.Card;
+import com.bank.cards.model.Customer;
+import com.bank.cards.repository.CardRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+public class CardController {
+
+    @Autowired
+    private CardRepository cardRepository;
+
+    @PostMapping("/myCards")
+    public List<Card> getCardDetails(@RequestBody Customer customer) {
+        List<Card> cards = cardRepository.findByCustomerId(customer.getCustomerId());
+        if (cards != null) {
+            return cards;
+        } else {
+            return null;
+        }
+
+    }
+}
+```
 
