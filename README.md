@@ -580,5 +580,11 @@ INSERT INTO `cards` (`card_number`, `customer_id`, `card_type`, `total_limit`, `
  VALUES ('2359XXXX9346', 1, 'Credit', 20000, 4000, 16000, CURDATE());
 ```
 - Go to your Spring Boot main classes and start all the three microservices by right click-> Run As -> Java Application. This will start your microservices successfully at port 8085,8095,9090 based on the ports configured inside **application.properties**. Your can confirm the same by looking at the console logs.
-- Access the URLs of H2 databases of all the three microservices to make sure tables, columns, data is created inside them successfully. The URLs are [http://localhost:8085/h2- console/](http://localhost:8085/h2-console), http://localhost:8095/h2-console/, http://localhost:9090h2-console/ respectively.
+- Access the URLs of H2 databases of all the three microservices to make sure tables, columns, data is created inside them successfully. The URLs are [http://localhost:8085/h2- console/](http://localhost:8085/h2-console), [http://localhost:8095/h2-console/](http://localhost:8095/h2-console), [http://localhost:9090h2-console/](http://localhost:9090/h2-console) respectively.
 - Invoke the REST APIs http://localhost:8085/myAccount, http://localhost:8095/myLoans, http://localhost:9090/myCards through Postman by passing the below request in JSON format. You should get the response from the corresponding microservices.
+
+```
+{
+    "customerId": 1
+}
+```
